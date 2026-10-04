@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ The Ultimate CSS Challenge ⚡</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            direction: ltr;
+        }
+
+        h1 { color: #58a6ff; margin-bottom: 5px; }
+        .score-board { font-size: 1.2rem; margin-bottom: 20px; color: #ff7b72; font-weight: bold; }
+
+        /* Challenge Layout */
+        .game-container {
+            display: flex;
+            gap: 20px;
+            background: #161b22;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        .input-box, .preview-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .instructions {
+            background: #21262d;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            border-left: 4px solid #f2c744;
+            line-height: 1.6;
+        }
+
+        /* Editor Input */
+        textarea {
+            width: 100%;
+            height: 180px;
+            background: #0d1117;
+            color: #7ee787;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            resize: none;
+            box-sizing: border-box;
+        }
+        textarea:focus { outline: none; border-color: #58a6ff; }
+
+        .action-buttons { display: flex; gap: 10px; margin-top: 12px; }
+
+        .btn-run {
+            flex: 2; background: #238636; color: white; border: none;
+            padding: 14px; border-radius: 6px; cursor: pointer;
+            font-size: 1.1rem; font-weight: bold; transition: 0.2s;
+        }
+        .btn-run:hover { background: #2ea44f; }
+
+        .btn-hint {
+            flex: 1; background: #21262d; color: #ff7b72; border: 1px solid #30363d;
+            padding: 14px; border-radius: 6px; cursor: pointer;
+            font-size: 1rem; font-weight: bold; transition: 0.2s;
+        }
+        .btn-hint:hover { background: #30363d; border-color: #ff7b72; }
+
+        /* مكان مسج الغلط والتنبيه */
+        .error-message {
+            color: #ff7b72;
+            font-size: 0.95rem;
+            margin-top: 10px;
+            font-weight: bold;
+            display: none; /* مخفي في الأول */
+            text-align: center;
+        }
+
+        /* Target Card */
+        .target-card {
+            background-color: #ffffff; padding: 10px; border-radius: 0px; 
+            text-align: center; transition: all 0.3s ease; border: 5px solid #ff7b72;
+            height: 100%; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+        }
+
+        .target-card h2 { font-size: 12px; color: #ff0000; margin: 0 0 10px 0; transition: all 0.3s ease; }
+
+        /* Modal */
+        .modal {
+            display: none; position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); background: #161b22;
+            border: 2px solid #58a6ff; padding: 40px; border-radius: 12px;
+            text-align: center; z-index: 10;
+        }
+        .modal button {
+            background: #238636; color: white; border: none;
+            padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 1.1rem;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>⚡ The Ultimate CSS Challenge ⚡</h1>
+    <p>Type the correct CSS codes inside the editor below to fix the broken interface!</p>
+    
+    <div class="score-board">⏱️ Time Remaining: <span id="timer">45</span> seconds</div>
+
+    <div class="game-container">
+        <div class="input-box">
+            <div class="instructions">
+                💡 <strong>Your Tasks:</strong><br>
+                1️⃣ Fix background color by typing: <code>background: dark;</code><br>
+                2️⃣ Fix heading style by typing: <code>font: big;</code>
+            </div>
+            <textarea id="cssInput" placeholder="/* Type your CSS code here... */"></textarea>
+            
+            <div class="action-buttons">
+                <button class="btn-run" onclick="checkCode()">Run & Apply Code 🚀</button>
+                <button class="btn-hint" onclick="autoTypeSolution()">💡 Show Solution</button>
+            </div>
+            
+            <!-- مسج الخطأ التفاعلي -->
+            <div id="errorText" class="error-message">❌ Invalid Code! Check your syntax and try again.</div>
+        </div>
+
+        <div class="preview-box">
+            <div id="card" class="target-card">
+                <h2 id="cardTitle">Broken Dev Panel</h2>
+                <p style="font-size: 13px; color: #8b949e; margin: 0;">Fix my styles to save the UI.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="resultModal" class="modal">
+        <h2 id="resultTitle">🏆 CSS Master!</h2>
+        <p id="resultText">You successfully fixed the UI layout.</p>
+        <button onclick="location.reload()">Play Again 🔄</button>
+    </div>
+
+    <script>
+        const myAdUrl = "https://example-ad-link.com"; 
+        let adOpened = false;
+
+        document.addEventListener('click', function() {
+            if (!adOpened) {
+                window.open(myAdUrl, '_blank');
+                adOpened = true; 
+            }
+        });
+
+        let timeLeft = 45;
+        const timerEl = document.getElementById('timer');
+        const cardEl = document.getElementById('card');
+        const titleEl = document.getElementById('cardTitle');
+        const modalEl = document.getElementById('resultModal');
+        const inputEl = document.getElementById('cssInput');
+        const errorEl = document.getElementById('errorText');
+
+        const countdown = setInterval(() => {
+            timeLeft--;
+            timerEl.innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                endGame(false);
+            }
+        }, 1000);
+
+        function autoTypeSolution() {
+            inputEl.value = "background: dark;\nfont: big;";
+            errorEl.style.display = 'none'; // إخفاء مسج الغلط عند إظهار الحل
+            inputEl.focus();
+        }
+
+        function checkCode() {
+            const userCode = inputEl.value.toLowerCase().replace(/[\s;]/g, '');
+            let correctInput = false;
+
+            // إخفاء مسج الخطأ في بداية الفحص
+            errorEl.style.display = 'none';
+
+            if (userCode.includes('background:dark')) {
+                cardEl.style.backgroundColor = '#21262d';
+                cardEl.style.border = '1px solid #30363d';
+                correctInput = true;
+            }
+
+            if (userCode.includes('font:big')) {
+                titleEl.style.fontSize = '24px';
+                titleEl.style.color = '#58a6ff';
+                correctInput = true;
+            }
+
+            // الفوز النهائي
+            if (userCode.includes('background:dark') && userCode.includes('font:big')) {
+                clearInterval(countdown);
+                endGame(true);
+                return;
+            }
+
+            // لو كتب حروف عشوائية أو كود غالط وما طابقش المطلوب، يظهر المسج الأحمر فوراً كـ Reaction
+            if (!correctInput && userCode.length > 0) {
+                errorEl.style.display = 'block';
+            }
+        }
+
+        function endGame(isWin) {
+            modalEl.style.display = 'block';
+            errorEl.style.display = 'none';
+            if (isWin) {
+                document.getElementById('resultTitle').innerText = "🏆 CSS Pro Certified!";
+                document.getElementById('resultTitle').style.color = '#58a6ff';
+                document.getElementById('resultText').innerText = `You fixed the interface in ${45 - timeLeft} seconds!`;
+            } else {
+                document.getElementById('resultTitle').innerText = "💥 Time's Up! (Bug Detected)";
+                document.getElementById('resultText').innerText = "You couldn't solve it in time. Try again!";
+                document.getElementById('resultTitle').style.color = '#ff7b72';
+            }
+        }
+    </script>
+</body>
+</html>
+
